@@ -127,7 +127,7 @@ classdef HumanData < d12pack.MobileData
                 end
                 InBed = Temp;
             else
-                InBed = logical.empty(numel(obj.Time),0);
+                InBed = false(size(obj.Time));
             end
         end % End of get InBed method
         
