@@ -241,13 +241,15 @@ classdef HumanData < d12pack.MobileData
         % Get GeometricMeanWakingIlluminance
         function GeometricMeanWakingIlluminance = get.GeometricMeanWakingIlluminance(obj)
             idx = ~obj.InBed & obj.Compliance & obj.Observation;
-            GeometricMeanWakingIlluminance = geomean(obj.Illuminance(idx));
+            idx0 = obj.Illuminance <= 0;
+            GeometricMeanWakingIlluminance = geomean(obj.Illuminance(idx&~idx0));
         end % End of get GeometricMeanWakingIlluminance
         
         % Get GeometricMeanWakingCircadianLight
         function GeometricMeanWakingCircadianLight = get.GeometricMeanWakingCircadianLight(obj)
             idx = ~obj.InBed & obj.Compliance & obj.Observation;
-            GeometricMeanWakingCircadianLight = geomean(obj.CircadianLight(idx));
+            idx0 = obj.CircadianLight <= 0;
+            GeometricMeanWakingCircadianLight = geomean(obj.CircadianLight(idx&~idx0));
         end % End of get GeometricMeanWakingCircadianLight
         
         % Get MedianWakingIlluminance
@@ -302,13 +304,15 @@ classdef HumanData < d12pack.MobileData
         % Get GeometricMeanAtWorkIlluminance
         function GeometricMeanAtWorkIlluminance = get.GeometricMeanAtWorkIlluminance(obj)
             idx = obj.AtWork & obj.Compliance & obj.Observation;
-            GeometricMeanAtWorkIlluminance = geomean(obj.Illuminance(idx));
+            idx0 = obj.Illuminance <= 0;
+            GeometricMeanAtWorkIlluminance = geomean(obj.Illuminance(idx&~idx0));
         end % End of get GeometricMeanAtWorkIlluminance
         
         % Get GeometricMeanAtWorkCircadianLight
         function GeometricMeanAtWorkCircadianLight = get.GeometricMeanAtWorkCircadianLight(obj)
             idx = obj.AtWork & obj.Compliance & obj.Observation;
-            GeometricMeanAtWorkCircadianLight = geomean(obj.CircadianLight(idx));
+            idx0 = obj.CircadianLight <= 0;
+            GeometricMeanAtWorkCircadianLight = geomean(obj.CircadianLight(idx&~idx0));
         end % End of get GeometricMeanAtWorkCircadianLight
         
         % Get MedianAtWorkIlluminance
@@ -363,13 +367,15 @@ classdef HumanData < d12pack.MobileData
         % Get GeometricMeanPreWorkIlluminance
         function GeometricMeanPreWorkIlluminance = get.GeometricMeanPreWorkIlluminance(obj)
             idx = obj.PreWork & obj.Compliance & obj.Observation;
-            GeometricMeanPreWorkIlluminance = geomean(obj.Illuminance(idx));
+            idx0 = obj.Illuminance <= 0;
+            GeometricMeanPreWorkIlluminance = geomean(obj.Illuminance(idx&~idx0));
         end % End of get GeometricMeanPreWorkIlluminance
         
         % Get GeometricMeanPreWorkCircadianLight
         function GeometricMeanPreWorkCircadianLight = get.GeometricMeanPreWorkCircadianLight(obj)
             idx = obj.PreWork & obj.Compliance & obj.Observation;
-            GeometricMeanPreWorkCircadianLight = geomean(obj.CircadianLight(idx));
+            idx0 = obj.CircadianLight <= 0;
+            GeometricMeanPreWorkCircadianLight = geomean(obj.CircadianLight(idx&~idx0));
         end % End of get GeometricMeanPreWorkCircadianLight
         
         % Get MedianPreWorkIlluminance
@@ -424,13 +430,15 @@ classdef HumanData < d12pack.MobileData
         % Get GeometricMeanPostWorkIlluminance
         function GeometricMeanPostWorkIlluminance = get.GeometricMeanPostWorkIlluminance(obj)
             idx = obj.PostWork & obj.Compliance & obj.Observation;
-            GeometricMeanPostWorkIlluminance = geomean(obj.Illuminance(idx));
+            idx0 = obj.Illuminance <= 0;
+            GeometricMeanPostWorkIlluminance = geomean(obj.Illuminance(idx&~idx0));
         end % End of get GeometricMeanPostWorkIlluminance
         
         % Get GeometricMeanPostWorkCircadianLight
         function GeometricMeanPostWorkCircadianLight = get.GeometricMeanPostWorkCircadianLight(obj)
             idx = obj.PostWork & obj.Compliance & obj.Observation;
-            GeometricMeanPostWorkCircadianLight = geomean(obj.CircadianLight(idx));
+            idx0 = obj.CircadianLight <= 0;
+            GeometricMeanPostWorkCircadianLight = geomean(obj.CircadianLight(idx&~idx0));
         end % End of get GeometricMeanPostWorkCircadianLight
         
         % Get MedianPostWorkIlluminance
