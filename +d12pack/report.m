@@ -154,6 +154,7 @@ classdef report < matlab.mixin.SetGet
             obj.Header.BackgroundColor	= 'white';
             
             obj.TitleBox = annotation(obj.Header,'textbox');
+            obj.TitleBox.Interpreter = 'none';
             obj.TitleBox.LineStyle = 'none';
             obj.TitleBox.HorizontalAlignment = 'center';
             obj.TitleBox.VerticalAlignment = 'middle';

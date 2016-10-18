@@ -10,18 +10,20 @@ classdef daysigram < d12pack.report
     methods
         function obj = daysigram(varargin)
             obj@d12pack.report;
-            obj.Type = 'Daysigram Report';
+            
             if nargin == 0
                 nPages = 1;
             else
                 src = varargin{1};
+                srcClass = class(src);
+                
                 Title = varargin{2};
                 if nargin == 4;
                     StartDate = varargin{3};
                     EndDate = varargin{4};
                 else
-                    StartDate = src.Time(1);
-                    EndDate = src.Time(end);
+                    StartDate = dateshift(min(src.Time(src.Observation)),'start','day');
+                    EndDate = dateshift(max(src.Time(src.Observation)),'end','day');
                 end
                 idxLimits = src.Time >= StartDate & src.Time <= EndDate;
                 t = src.Time(idxLimits);
@@ -29,20 +31,27 @@ classdef daysigram < d12pack.report
                 Dates = datetime(unique([y(:),m(:),d(:)],'rows'),'TimeZone',src.Time(1).TimeZone);
                 nDates = numel(Dates);
                 nPages = ceil(nDates/10);
-                
-                srcClass = class(src);
             end
             
-            obj(nPages,1) = obj;
+            obj.Type = 'Daysigram Report';
+            
+            if nPages > 1
+                obj(nPages,1) = d12pack.daysigram;
+                for iPage = 1:nPages
+                    obj(iPage,1).PageNumber = [iPage,nPages];
+                    obj(iPage,1).Title = Title;
+                end
+            end
             
             if exist('src','var') == 1
                 iDate = 1;
                 for iPage = 1:nPages
-                    obj(iPage,1).Title = Title;
-                    obj(iPage,1).PageNumber = [iPage,nPages];
+                    figure(obj(iPage,1).Figure);
+                    
+                    
+                    
                     obj(iPage,1).initAxes;
                     obj(iPage,1).initLegend;
-                    obj(iPage,1).Type = 'Daysigram Report';
                     
                     while iDate <= iPage*10
                         if iDate <= nDates

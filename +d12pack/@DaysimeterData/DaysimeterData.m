@@ -243,6 +243,7 @@ classdef DaysimeterData
     % External public methods
     methods
         t = table(obj)
+        export(obj,filepath)
     end
     
     % External public static methods
