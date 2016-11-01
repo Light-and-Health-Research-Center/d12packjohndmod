@@ -10,7 +10,8 @@ switch ext
         t = readtable(FilePath,...
             'FileType','spreadsheet',...
             'ReadVariableNames',true,...
-            'Basic',true);
+            'Basic',true,...
+            'DatetimeType','exceldatenum');
         warning(s);
     otherwise
         error('Bed log file must be a spreadsheet.');
@@ -30,7 +31,11 @@ if iscell(t.RiseTime)
     t.RiseTime = str2double(t.RiseTime);
 end
 % Remove empty rows
+try
 idx = isnan(t.BedTime) & isnan(t.RiseTime);
+catch err
+    display(err.message)
+end
 t(idx,:) = [];
 
 if ~isempty(t)
