@@ -6,6 +6,7 @@ classdef DaysimeterData
     % Public properties
     properties
         SerialNumber     uint16   % Daysimeter serial number
+        ID               char     % Unique ID for subject, location, etc.
         Calibration      d12pack.CalibrationData % Calibration values
         CalibrationRatio double % Ratio used when mixing multiple calibration
         RatioMethod      char

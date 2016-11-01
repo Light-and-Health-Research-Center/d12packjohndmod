@@ -3,7 +3,6 @@ classdef MobileData < d12pack.DaysimeterData
     %   Detailed explanation goes here
     
     properties
-        ID  char
     end
     
     properties (Dependent)
