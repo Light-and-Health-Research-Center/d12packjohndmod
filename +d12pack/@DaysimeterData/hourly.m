@@ -4,7 +4,7 @@ function HourlyValue = hourly(obj,Value,fun,varargin)
 %   fun is functinon handle or name see also FEVAL, ex. fun = 'mean'
 
 idx = obj.Observation & ~obj.Error;
-if isprop(obj,'Compliance');
+if isprop(obj,'Compliance')
     idx = idx & obj.Compliance;
 end
 if isprop(obj,'InBed')
