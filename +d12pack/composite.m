@@ -189,6 +189,10 @@ classdef composite < d12pack.report
         
         function plotPhasor(obj)
             vector = obj.Data.Phasor.Vector;
+            if isempty(vector)
+                return
+            end
+            
             Parent = obj.PhasorAxes;
             
             scale = 1.5;
@@ -424,14 +428,45 @@ classdef composite < d12pack.report
             hText.FontName = 'Arial';
             hText.HorizontalAlignment = 'right';
             hText.VerticalAlignment = 'baseline';
+            
+            if ~isempty(obj.Data.Phasor.Magnitude)
+                mag = obj.Data.Phasor.Magnitude;
+            else
+                mag = NaN;
+            end
+            if ~isempty(obj.Data.Phasor.Angle)
+                ang = obj.Data.Phasor.Angle.hours;
+            else
+                ang = NaN;
+            end
+            if ~isempty(obj.Data.InterdailyStability)
+                is = obj.Data.InterdailyStability;
+            else
+                is = NaN;
+            end
+            if ~isempty(obj.Data.IntradailyVariability)
+                iv = obj.Data.IntradailyVariability;
+            else
+                iv = NaN;
+            end
+            if ~isempty(obj.Data.MeanWakingActivityIndex)
+                ai = obj.Data.MeanWakingActivityIndex;
+            else
+                ai = NaN;
+            end
+            if ~isempty(obj.Data.MeanWakingCircadianStimulus)
+                cs = obj.Data.MeanWakingCircadianStimulus;
+            else
+                cs = NaN;
+            end
+            if ~isempty(obj.Data.GeometricMeanWakingIlluminance)
+                ill = obj.Data.GeometricMeanWakingIlluminance;
+            else
+                ill = [];
+            end
+            
             hText.String = sprintf('%.2f\n%.2f\n\n%.2f\n%.2f\n\n\n%.2f\n\n\n%.2f\n\n\n%.2f',...
-                obj.Data.Phasor.Magnitude,...
-                obj.Data.Phasor.Angle.hours,...
-                obj.Data.InterdailyStability,...
-                obj.Data.IntradailyVariability,...
-                obj.Data.MeanWakingActivityIndex,...
-                obj.Data.MeanWakingCircadianStimulus,...
-                obj.Data.GeometricMeanWakingIlluminance);
+                mag, ang, is, iv, ai, cs, ill);
         end
         
         %%
@@ -632,8 +667,12 @@ classdef composite < d12pack.report
         end % End of initAngleDistAxes
         
         function plotDist(obj)
+            if ~isempty(obj.Data.Phasor.Magnitude)
             obj.plotOnCurve(obj.MagnitudeDistAxes,obj.Data.Phasor.Magnitude,'Subject',obj.MagnitudeDistCurve.XData,obj.MagnitudeDistCurve.YData);
+            end
+            if ~isempty(obj.Data.Phasor.Angle)
             obj.plotOnCurve(obj.AngleDistAxes,obj.Data.Phasor.Angle.hours,'Subject',obj.AngleDistCurve.XData,obj.AngleDistCurve.YData);
+            end
         end
     end
     

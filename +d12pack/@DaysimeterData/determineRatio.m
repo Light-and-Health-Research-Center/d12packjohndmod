@@ -10,6 +10,8 @@ if ~isempty(obj.Calibration)
     end
     
     switch RatioMethod
+        case 'normal'
+            CalibrationRatio = normalMethod(obj);
         case 'newest'
             CalibrationRatio = newestMethod(obj);
         case 'luxthreshold'
@@ -30,6 +32,35 @@ end
 end
 
 
+% normal method
+function CalibrationRatio = normalMethod(obj)
+CalibrationRatio = zeros(numel(obj.Time),numel(obj.Calibration));
+
+TCals = table(obj.Calibration);
+TCals.Date(isnat(TCals.Date)) = datetime(1988,1,1,'TimeZone','America/New_York');
+
+calDates = vertcat(TCals.Date);
+
+validDate = max(calDates(calDates<obj.Time(1)));
+if ~isempty(validDate)
+    SelectedCal = TCals(TCals.Date == validDate,:);
+    if size(SelectedCal,1) > 1 % If more than one pick last
+        SelectedCal = SelectedCal(end,:);
+    end
+else
+    error('No valid calibration.')
+end
+
+% Find the index of the selection
+SelectedIdx = (TCals.Red == SelectedCal.Red) & ...
+    (TCals.Green == SelectedCal.Green) & ...
+    (TCals.Blue == SelectedCal.Blue) & ...
+    (strcmp(TCals.Label,SelectedCal.Label));
+
+CalibrationRatio(:,SelectedIdx) = 1;
+
+end % End of nromalMethod
+
 % newest method
 function CalibrationRatio = newestMethod(obj)
 CalibrationRatio = zeros(numel(obj.Time),numel(obj.Calibration));
@@ -38,22 +69,22 @@ TCals = table(obj.Calibration);
 
 NewestDate = max(vertcat(TCals.Date));
 if isnat(NewestDate)
-    SelectedPost = TCals(end,:);
+    SelectedCal = TCals(end,:);
 else
-    SelectedPost = TCals(TCals.Date == NewestDate,:);
-    if size(SelectedPost,1) > 1 % If more than one pick last
-        SelectedPost = SelectedPost(end,:);
+    SelectedCal = TCals(TCals.Date == NewestDate,:);
+    if size(SelectedCal,1) > 1 % If more than one pick last
+        SelectedCal = SelectedCal(end,:);
     end
 end
 % Find the index of the selection
-SelectedIdx = (TCals.Red == SelectedPost.Red) & ...
-    (TCals.Green == SelectedPost.Green) & ...
-    (TCals.Blue == SelectedPost.Blue) & ...
-    (strcmp(TCals.Label,SelectedPost.Label));
+SelectedIdx = (TCals.Red == SelectedCal.Red) & ...
+    (TCals.Green == SelectedCal.Green) & ...
+    (TCals.Blue == SelectedCal.Blue) & ...
+    (strcmp(TCals.Label,SelectedCal.Label));
 
 CalibrationRatio(:,SelectedIdx) = 1;
 
-end % End of postIRMethod
+end % End of newestMethod
 
 
 % luxthreshold method

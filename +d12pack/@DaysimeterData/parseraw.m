@@ -9,7 +9,7 @@ data_log = obj.data_log;
 % seperate data into raw R,G,B,A
 n = floor(numel(data_log)/4)*4;
 data_log = data_log(1:n);
-d = (reshape(data_log,4,n/4))';
+d = double((reshape(data_log,4,n/4))');
 RedCounts = d(:,1);
 GreenCounts = d(:,2);
 BlueCounts = d(:,3);
@@ -24,6 +24,15 @@ s.RedCounts = RedCounts(q);
 s.GreenCounts = GreenCounts(q);
 s.BlueCounts = BlueCounts(q);
 s.ActivityIndexCounts = ActivityIndexCounts(q);
+
+% Apply range change
+% ActivityIndexCounts is odd other values high x10 (flag = true)
+% ActivityIndexCounts is even other values low x1 (flag = false)
+flag = mod(s.ActivityIndexCounts,2) == 1;
+s.RedCounts(flag)   = s.RedCounts(flag)*10;
+s.GreenCounts(flag) = s.GreenCounts(flag)*10;
+s.BlueCounts(flag)  = s.BlueCounts(flag)*10;
+s.ActivityIndexCounts(flag) = s.ActivityIndexCounts(flag)-1;
 
 % Summarize resets
 OriginalResets2 = [false;OriginalResets(~unwritten)];

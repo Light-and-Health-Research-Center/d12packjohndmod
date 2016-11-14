@@ -10,6 +10,7 @@ end
 if isprop(obj,'InBed')
     if ~isempty(obj.InBed)
         idx = idx & ~obj.InBed;
+%         Value(obj.InBed) = 0;
     end
 end
 if nargin == 4
