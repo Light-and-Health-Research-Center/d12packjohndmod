@@ -18,7 +18,7 @@ classdef daysigram < d12pack.report
                 srcClass = class(src);
                 
                 Title = varargin{2};
-                if nargin == 4;
+                if nargin == 4
                     StartDate = varargin{3};
                     EndDate = varargin{4};
                 else
@@ -36,8 +36,10 @@ classdef daysigram < d12pack.report
             obj.Type = 'Daysigram Report';
             
             if nPages > 1
-                obj(nPages,1) = d12pack.daysigram;
                 for iPage = 1:nPages
+                    if iPage > 1
+                        obj(iPage,1) = d12pack.daysigram;
+                    end
                     obj(iPage,1).PageNumber = [iPage,nPages];
                     obj(iPage,1).Title = Title;
                 end
