@@ -25,10 +25,9 @@ classdef daysigram < d12pack.report
                     StartDate = dateshift(min(src.Time(src.Observation)),'start','day');
                     EndDate = dateshift(max(src.Time(src.Observation)),'end','day');
                 end
-                idxLimits = src.Time >= StartDate & src.Time <= EndDate;
+                idxLimits = src.Time >= StartDate & src.Time < EndDate;
                 t = src.Time(idxLimits);
-                [y,m,d] = ymd(t);
-                Dates = datetime(unique([y(:),m(:),d(:)],'rows'),'TimeZone',src.Time(1).TimeZone);
+                Dates  = dateshift(min(t),'start','day'):dateshift(max(t),'start','day');
                 nDates = numel(Dates);
                 nPages = ceil(nDates/10);
             end
