@@ -9,7 +9,7 @@ if obj.SerialNumber < 366
     Sm = [-0.005701 -0.014015 0.241859];
     Vm = [ 0.381876  0.642883 0.067544];
     Vp = [ 0.004458  0.360213 0.189536];
-elseif obj.SerialNumber >= 366 && obj.SerialNumber <= 415
+elseif obj.SerialNumber >= 366 %&& obj.SerialNumber <= 415
     C  = [ 0.613631  3.385647 0.235952 2.310402];
     M  = [-0.001684  0.164230 0.265890];
     Sm = [-0.005284 -0.015436 0.243373];

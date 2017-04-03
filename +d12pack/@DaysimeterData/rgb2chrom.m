@@ -5,6 +5,7 @@ function chromaticity = rgb2chrom(red,green,blue)
 %	chromMatrix is a 3 x 3 matrix of calibration coefficients used to
 %	calculate chromaticity.
 
+% Todo: create filter based on serial number for different chrom matrices
 % Create chromMatrix.
 chromMatrix = ...
     [0.656101046989039,	0.284972476979684,  0.001350826922588; ...
