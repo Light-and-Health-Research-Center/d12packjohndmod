@@ -32,6 +32,8 @@ classdef DaysimeterData
         
         Created      datetime % When the original files were downloaded
         Modified     datetime % When this object was last saved
+        
+        UserData     struct = struct(); % Empty struct for custom use
     end
     
     % Dependent public properties

@@ -11,8 +11,8 @@ function [IS,IV] = isiv(ActivityIndex,epoch)
 %
 % See also SAMPLINGRATE.
 
-IS = [];
-IV = [];
+IS = NaN;
+IV = NaN;
 
 n1 = numel(ActivityIndex);
 if (n1 < 24 || n1*hours(epoch) < 24)
