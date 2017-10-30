@@ -63,7 +63,7 @@ classdef MobileData < d12pack.DaysimeterData
         end % End of get InterdailyStability
     end
     
-    methods (Static, Access = protected)
+    methods (Static, Access = public)
         Phasor = computePhasor(Time,CS,Epoch,ActivityIndex,Observation,varargin)
         [IS,IV] = isiv(ActivityIndex,epoch)
     end
