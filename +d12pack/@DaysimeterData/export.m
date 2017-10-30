@@ -1,4 +1,4 @@
-function export(obj,filepath)
+function export(obj,filepath,varargin)
 %EXPORT Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -25,7 +25,20 @@ t = table( ...
     obj.Resets, ...
     'VariableNames',varNames);
 
-writetable(t,filepath);
+switch nargin
+    case 2
+        writetable(t,filepath);
+    case 3
+        writetable(t,filepath,'Sheet',varargin{1});
+    case 4
+        if varargin{2}
+            t.Compliance = obj.Compliance;
+            t = t(obj.Observation,:);
+            writetable(t,filepath,'Sheet',varargin{1});
+        end
+    otherwise
+        writetable(t,filepath);
+end
 
 end
 

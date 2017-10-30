@@ -260,7 +260,7 @@ classdef DaysimeterData
         Illuminance = rgb2lux(obj,Red,Green,Blue)
         CircadianLight = rgb2cla(obj,Red,Green,Blue)
         t = table(obj)
-        export(obj,filepath)
+        export(obj,filepath,varargin)
         HourlyValue = hourly(obj,Value,fun,varargin)
     end
     
