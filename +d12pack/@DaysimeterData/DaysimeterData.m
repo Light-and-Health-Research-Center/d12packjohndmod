@@ -51,6 +51,7 @@ classdef DaysimeterData
         Illuminance       double %
         CircadianLight    double %
         CircadianStimulus double %
+        Melanopsin        double
         Chromaticity      double
         
         MillerCircadianStimulus
@@ -200,6 +201,11 @@ classdef DaysimeterData
             CircadianStimulus = obj.cla2cs(obj.CircadianLight);
         end % End of get CircadianStimulus
         
+        % Get Melanopsin
+        function Melanopsin = get.Melanopsin(obj)
+            Melanopsin = obj.rgb2melanopsin(obj.Red,obj.Green,obj.Blue);
+        end % End of get Illuminance
+        
         % Get Chromaticity
         function Chromaticity = get.Chromaticity(obj)
             Chromaticity = obj.rgb2chrom(obj.Red,obj.Green,obj.Blue);
@@ -259,6 +265,7 @@ classdef DaysimeterData
     methods
         Illuminance = rgb2lux(obj,Red,Green,Blue)
         CircadianLight = rgb2cla(obj,Red,Green,Blue)
+        Melanopsin = rgb2melanopsin(obj,Red,Green,Blue)
         t = table(obj)
         export(obj,filepath,varargin)
         HourlyValue = hourly(obj,Value,fun,varargin)
