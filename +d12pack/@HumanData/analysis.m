@@ -5,10 +5,14 @@ function t = analysis(obj)
 SerialNumber = {obj.SerialNumber}';
 ID = {obj.ID}';
 temp = repmat({[]},size(ID));
+tempNaN = NaN(size(ID));
 sectionBreak = temp;
 location = vertcat(obj.Location);
 session = vertcat(obj.Session);
 phasor = vertcat(obj.Phasor);
+
+InterdailyStability = vertcat(obj.InterdailyStability);
+IntradailyVariability = vertcat(obj.IntradailyVariability);
 
 WakingCoverage              = days(vertcat(obj.WakingCoverage));
 MeanWakingActivityIndex     = vertcat(obj.MeanWakingActivityIndex);
@@ -73,6 +77,8 @@ VariableNames = {...
     'Phasor_Coverage_Days',...
     'Phasor_Magnitude',...
     'Phasor_Angle_Hours',...
+    'InterdailyStability',...
+    'IntradailyVariability',...
     ...
     'Section_Break_2',...
     ...
@@ -142,9 +148,11 @@ t = table(...
     ...
     sectionBreak,...
     ...
-    temp,... % Phasor_Coverage_Days
-    temp,... % Phasor_Magnitude
-    temp,... % Phasor_Angle_Hours
+    tempNaN,... % Phasor_Coverage_Days
+    tempNaN,... % Phasor_Magnitude
+    tempNaN,... % Phasor_Angle_Hours
+    InterdailyStability,...
+    IntradailyVariability,...
     ...
     sectionBreak,...
     ...
@@ -201,21 +209,21 @@ t = table(...
     'VariableNames',VariableNames);
 
 for ii = 1:numel(ID)
-    t.City_State{ii,1} = [location(ii).City,', ',location(ii).PostalStateAbbreviation];
-    t.Building_Name{ii,1} = location(ii).BuildingName;
-    t.Session_Name{ii,1} = session(ii).Name;
-    
-    t.Wing{ii,1} = location(ii).Wing;
-    t.Floor{ii,1} = location(ii).Floor;
-    t.Workstation{ii,1} = location(ii).Workstation;
-    t.Exposure{ii,1} = location(ii).Exposure;
-    
-    t.Phasor_Coverage_Days{ii,1} = days(phasor(ii).Coverage);
-    t.Phasor_Magnitude{ii,1} = phasor(ii).Magnitude;
+    if ~isempty(location) && ~isempty(session)
+        t.City_State{ii,1} = [location(ii).City,', ',location(ii).PostalStateAbbreviation];
+        t.Building_Name{ii,1} = location(ii).BuildingName;
+        t.Session_Name{ii,1} = session(ii).Name;
+        
+        t.Wing{ii,1} = location(ii).Wing;
+        t.Floor{ii,1} = location(ii).Floor;
+        t.Workstation{ii,1} = location(ii).Workstation;
+        t.Exposure{ii,1} = location(ii).Exposure;
+    end
+    t.Phasor_Coverage_Days(ii,1) = days(phasor(ii).Coverage);
+    t.Phasor_Magnitude(ii,1) = phasor(ii).Magnitude;
     if ~isempty(phasor(ii).Angle)
-        t.Phasor_Angle_Hours{ii,1} = phasor(ii).Angle.hours;
+        t.Phasor_Angle_Hours(ii,1) = phasor(ii).Angle.hours;
     end
 end
-
 end
 

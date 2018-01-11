@@ -1,5 +1,5 @@
-function CircadianLight = rgb2cla(obj,Red,Green,Blue)
-%RGB2CLA Convert Daysimeter Red, Green, and Blue channels (RGB) to
+function CLA_mel = rgb2melanopsin(obj,Red,Green,Blue)
+%RGB2MELANOPSIN Convert Daysimeter Red, Green, and Blue channels (RGB) to
 % Circadian Light (CLA)
 
 % Define constants
@@ -32,13 +32,11 @@ Vmaclamda(Vmaclamda<0) = 0;
 Melanopsin(Melanopsin<0) = 0;
 Vprime(Vprime<0) = 0;
 
-Temp = Melanopsin;
-idx  = Scone > C(3)*Vmaclamda;
-Temp(idx) = Melanopsin(idx) ...
-    + C(1)*(Scone(idx) - C(3)*Vmaclamda(idx)) ...
-    - C(2)*683*(1 - exp(-(Vprime(idx)/(683*6.5))));
+CL = Melanopsin;
 
-CircadianLight = C(4)*Temp;
+
+CLA_mel = C(4)*CL;
+
 
 end
 

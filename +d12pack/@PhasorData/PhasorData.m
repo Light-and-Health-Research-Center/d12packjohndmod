@@ -3,12 +3,12 @@ classdef PhasorData
     %   Detailed explanation goes here
     
     properties
-        Vector             double
-        Magnitude          double
-        Angle              %d12pack.Angle
-        MagnitudeHarmonics double
-        FirstHarmonic      double
-        Coverage           duration
+        Vector = NaN
+        Magnitude = NaN
+        Angle
+        MagnitudeHarmonics = NaN
+        FirstHarmonic = NaN
+        Coverage = NaN
     end
     
     methods

@@ -32,6 +32,8 @@ classdef DaysimeterData
         
         Created      datetime % When the original files were downloaded
         Modified     datetime % When this object was last saved
+        
+        UserData     struct = struct(); % Empty struct for custom use
     end
     
     % Dependent public properties
@@ -49,6 +51,8 @@ classdef DaysimeterData
         Illuminance       double %
         CircadianLight    double %
         CircadianStimulus double %
+        Melanopsin        double
+        Chromaticity      double
         
         MillerCircadianStimulus
         MillerActivityIndex
@@ -56,6 +60,7 @@ classdef DaysimeterData
         HourlyMeanIlluminance       double
         HourlyMeanCircadianLight    double
         HourlyMeanCircadianStimulus double
+        HourlyMeanActivityIndex     double
         
         HourlyGeometricMeanIlluminance       double
         HourlyGeometricMeanCircadianLight    double
@@ -158,7 +163,7 @@ classdef DaysimeterData
             % convert activity to rms g
             % raw activity is a mean squared value, 1 count = .0039 g's, and the 4 comes
             % from four right shifts in the source code
-            ActivityIndex = (sqrt(double(obj.ActivityIndexCounts)))*.0039*4;
+            ActivityIndex = (sqrt(double(obj.ActivityIndexCounts)))*0.0039*4;
         end % End of get ActivityIndex
         
         % Get Observation
@@ -196,6 +201,16 @@ classdef DaysimeterData
             CircadianStimulus = obj.cla2cs(obj.CircadianLight);
         end % End of get CircadianStimulus
         
+        % Get Melanopsin
+        function Melanopsin = get.Melanopsin(obj)
+            Melanopsin = obj.rgb2melanopsin(obj.Red,obj.Green,obj.Blue);
+        end % End of get Illuminance
+        
+        % Get Chromaticity
+        function Chromaticity = get.Chromaticity(obj)
+            Chromaticity = obj.rgb2chrom(obj.Red,obj.Green,obj.Blue);
+        end % End of get Chromaticity
+        
         %%
          % Get MillerCircadianStimulus
         function MillerCircadianStimulus = get.MillerCircadianStimulus(obj)
@@ -224,6 +239,11 @@ classdef DaysimeterData
             HourlyMeanCircadianStimulus = hourly(obj,obj.CircadianStimulus,'mean');
         end % End of get HourlyMeanCircadianStimulus
         
+        % Get HourlyMeanActivityIndex
+        function HourlyMeanActivityIndex = get.HourlyMeanActivityIndex(obj)
+            HourlyMeanActivityIndex = hourly(obj,obj.ActivityIndex,'mean');
+        end % End of get HourlyMeanCircadianStimulus
+        
         %%
         % Get HourlyGeometricMeanIlluminance
         function HourlyGeometricMeanIlluminance = get.HourlyGeometricMeanIlluminance(obj)
@@ -243,16 +263,19 @@ classdef DaysimeterData
     
     % External public methods
     methods
+        Illuminance = rgb2lux(obj,Red,Green,Blue)
+        CircadianLight = rgb2cla(obj,Red,Green,Blue)
+        Melanopsin = rgb2melanopsin(obj,Red,Green,Blue)
         t = table(obj)
-        export(obj,filepath)
+        export(obj,filepath,varargin)
+        HourlyValue = hourly(obj,Value,fun,varargin)
     end
     
     % External public static methods
     methods (Static)
         CalibratedValue = applyCalibration(Value,CalibrationArray,CalibrationRatio)
-        Illuminance = rgb2lux(Red,Green,Blue)
-        CircadianLight = rgb2cla(Red,Green,Blue)
         CircadianStimulus = cla2cs(CircadianLight)
+        Chromaticity = rgb2chrom(Red,Green,Blue)
     end
     
     % External protected methods
@@ -260,10 +283,9 @@ classdef DaysimeterData
         s = parseraw(obj,varargin)
         s = parseloginfo(obj,varargin)
         CalibrationRatio = determineRatio(obj)
-        HourlyValue = hourly(obj,Value,fun,varargin)
     end
     
-    % External static protected methods
+    % External static methods
     methods (Static)
         log_info = readloginfo(log_info_path)
         data_log = readdatalog(data_log_path)

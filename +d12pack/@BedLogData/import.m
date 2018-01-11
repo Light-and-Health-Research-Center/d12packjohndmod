@@ -7,10 +7,18 @@ function obj = import(obj,FilePath,varargin)
 switch ext
     case {'.xls','.xlsx','.xlsm','.xltx','.xltm'}
         s = warning('off','MATLAB:table:ModifiedVarnames');
-        t = readtable(FilePath,...
-            'FileType','spreadsheet',...
-            'ReadVariableNames',true,...
-            'Basic',true);
+        if verLessThan('matlab','R2016b')
+            t = readtable(FilePath,...
+                'FileType','spreadsheet',...
+                'ReadVariableNames',true,...
+                'Basic',true);
+        else
+            t = readtable(FilePath,...
+                'FileType','spreadsheet',...
+                'ReadVariableNames',true,...
+                'Basic',true,...
+                'DatetimeType','exceldatenum');
+        end
         warning(s);
     otherwise
         error('Bed log file must be a spreadsheet.');
@@ -30,7 +38,11 @@ if iscell(t.RiseTime)
     t.RiseTime = str2double(t.RiseTime);
 end
 % Remove empty rows
-idx = isnan(t.BedTime) & isnan(t.RiseTime);
+try
+    idx = isnan(t.BedTime) & isnan(t.RiseTime);
+catch err
+    display(err.message)
+end
 t(idx,:) = [];
 
 if ~isempty(t)

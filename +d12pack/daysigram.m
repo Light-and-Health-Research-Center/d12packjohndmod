@@ -18,17 +18,16 @@ classdef daysigram < d12pack.report
                 srcClass = class(src);
                 
                 Title = varargin{2};
-                if nargin == 4;
+                if nargin == 4
                     StartDate = varargin{3};
                     EndDate = varargin{4};
                 else
                     StartDate = dateshift(min(src.Time(src.Observation)),'start','day');
                     EndDate = dateshift(max(src.Time(src.Observation)),'end','day');
                 end
-                idxLimits = src.Time >= StartDate & src.Time <= EndDate;
+                idxLimits = src.Time >= StartDate & src.Time < EndDate;
                 t = src.Time(idxLimits);
-                [y,m,d] = ymd(t);
-                Dates = datetime(unique([y(:),m(:),d(:)],'rows'),'TimeZone',src.Time(1).TimeZone);
+                Dates  = dateshift(min(t),'start','day'):dateshift(max(t),'start','day');
                 nDates = numel(Dates);
                 nPages = ceil(nDates/10);
             end
@@ -36,8 +35,10 @@ classdef daysigram < d12pack.report
             obj.Type = 'Daysigram Report';
             
             if nPages > 1
-                obj(nPages,1) = d12pack.daysigram;
                 for iPage = 1:nPages
+                    if iPage > 1
+                        obj(iPage,1) = d12pack.daysigram;
+                    end
                     obj(iPage,1).PageNumber = [iPage,nPages];
                     obj(iPage,1).Title = Title;
                 end

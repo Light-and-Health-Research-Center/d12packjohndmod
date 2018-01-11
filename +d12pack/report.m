@@ -9,7 +9,7 @@ classdef report < matlab.mixin.SetGet
         Header
         Footer
         Body
-        DateGenerate = datetime('now','TimeZone','local');
+        DateGenerated = datetime('now','TimeZone','local');
         LRClogo
         RPIlogo
     end
@@ -52,6 +52,8 @@ classdef report < matlab.mixin.SetGet
             addlistener(obj,'PageNumber','PostSet',@obj.pageNumCallback);
             addlistener(obj,'PaperType','PostSet',@obj.resizeCallback);
             addlistener(obj,'Orientation','PostSet',@obj.resizeCallback);
+            
+            obj.DateGenerated = datetime('now','TimeZone','local');
             
             obj.Figure = figure;
             obj.Figure.Renderer = 'painters';
@@ -192,7 +194,7 @@ classdef report < matlab.mixin.SetGet
             obj.Footer.BorderType = 'none';
             obj.Footer.BackgroundColor = 'white';
                         
-            nowStr = datestr(obj.DateGenerate,'yyyy mmmm dd, HH:MM');
+            nowStr = datestr(obj.DateGenerated,'yyyy mmmm dd, HH:MM');
             footerStr = {obj.Type;['Generated: ',nowStr]};
             
             obj.FooterBox = annotation(obj.Footer,'textbox');
@@ -309,8 +311,8 @@ classdef report < matlab.mixin.SetGet
     methods (Static)
         %% Update Footer text on event callback
         function footerTextCallback(src,evnt)
-            evnt.AffectedObject.DateGenerate = datetime('now','TimeZone','local');
-            nowStr = datestr(evnt.AffectedObject.DateGenerate,'yyyy mmmm dd, HH:MM');
+            evnt.AffectedObject.DateGenerated = datetime('now','TimeZone','local');
+            nowStr = datestr(evnt.AffectedObject.DateGenerated,'yyyy mmmm dd, HH:MM');
             footerStr = {evnt.AffectedObject.Type;['Generated: ',nowStr]};
             evnt.AffectedObject.FooterBox.String = footerStr;
         end

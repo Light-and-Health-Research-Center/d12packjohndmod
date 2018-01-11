@@ -45,9 +45,15 @@ classdef WorkLogData
                 end
                 nWorkstation = numel(Workstation);
                 if isequal(nStart,nEnd,nWorkstation)
-                    obj.StartTime   = StartTime(:);
-                    obj.EndTime     = EndTime(:);
-                    obj.Workstation = Workstation(:);
+                    if nStart > 1
+                        for iObj = nStart:-1:1
+                            obj(iObj,1) = d12pack.WorkLogData(StartTime(iObj), EndTime(iObj), IsFixed, Workstation(iObj));
+                        end
+                    else
+                        obj.StartTime   = StartTime;
+                        obj.EndTime     = EndTime;
+                        obj.Workstation = Workstation;
+                    end
                 else
                     error('Input must be of equal size.')
                 end

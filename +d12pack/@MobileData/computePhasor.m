@@ -17,6 +17,9 @@ switch nargin
         InBed = false(size(Time));
 end
 
+% Compute Coverage of Phasor
+Phasor.Coverage = Epoch*numel(Time);
+
 if ~isempty(Time) && ~isempty(CircadianStimulus) && ~isempty(ActivityIndex)
     
     % Assign value to zero when in bed
@@ -31,7 +34,10 @@ if ~isempty(Time) && ~isempty(CircadianStimulus) && ~isempty(ActivityIndex)
     CircadianStimulus(idxRemove) = [];
     ActivityIndex(idxRemove) = [];
     
-    if ~isempty(Time)
+    % Compute Coverage of Phasor
+    Phasor.Coverage = Epoch*numel(Time);
+    
+    if Phasor.Coverage >= duration(24,0,0)
         % Compute Phasor
         [Phasor.Vector,Phasor.Magnitude,Phasor.Angle,...
             Phasor.MagnitudeHarmonics,Phasor.FirstHarmonic] = ...
@@ -41,8 +47,7 @@ if ~isempty(Time) && ~isempty(CircadianStimulus) && ~isempty(ActivityIndex)
     end
     
 end
-% Compute Coverage of Phasor
-Phasor.Coverage = Epoch*numel(Time);
+
 
 end
 

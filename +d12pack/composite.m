@@ -189,6 +189,10 @@ classdef composite < d12pack.report
         
         function plotPhasor(obj)
             vector = obj.Data.Phasor.Vector;
+            if isempty(vector)
+                return
+            end
+            
             Parent = obj.PhasorAxes;
             
             scale = 1.5;
@@ -322,19 +326,21 @@ classdef composite < d12pack.report
             hCS.FaceColor = obj.LightBlue;
             hCS.EdgeColor = 'none';
             hCS.DisplayName = 'Circadian Stimulus (CS)';
+            hCS.Tag = 'onLegend';
             
             hAI = plot(obj.MillerAxes,t,AI);
             hAI.Color = 'black';
             hAI.LineWidth = 1;
             hAI.DisplayName = 'Activity Index (AI)';
+            hAI.Tag = 'onLegend';
             
-            hLegend = legend(obj.MillerAxes,'show');
+            hLine = plot(obj.MillerAxes,[0,0,24],[1,0,0],'Color','black','LineWidth',0.5);
+            
+            hLegend = legend(findobj(obj.MillerAxes,'Tag','onLegend'));
             hLegend.Box = 'off';
             hLegend.Orientation = 'horizontal';
             hLegend.Location = 'northoutside';
             hLegend.FontSize = 8;
-            
-            hLine = plot(obj.MillerAxes,[0,0,24],[1,0,0],'Color','black','LineWidth',0.5);
             
             hold(obj.MillerAxes,'off');
         end
@@ -424,14 +430,45 @@ classdef composite < d12pack.report
             hText.FontName = 'Arial';
             hText.HorizontalAlignment = 'right';
             hText.VerticalAlignment = 'baseline';
+            
+            if ~isempty(obj.Data.Phasor.Magnitude)
+                mag = obj.Data.Phasor.Magnitude;
+            else
+                mag = NaN;
+            end
+            if ~isempty(obj.Data.Phasor.Angle)
+                ang = obj.Data.Phasor.Angle.hours;
+            else
+                ang = NaN;
+            end
+            if ~isempty(obj.Data.InterdailyStability)
+                is = obj.Data.InterdailyStability;
+            else
+                is = NaN;
+            end
+            if ~isempty(obj.Data.IntradailyVariability)
+                iv = obj.Data.IntradailyVariability;
+            else
+                iv = NaN;
+            end
+            if ~isempty(obj.Data.MeanWakingActivityIndex)
+                ai = obj.Data.MeanWakingActivityIndex;
+            else
+                ai = NaN;
+            end
+            if ~isempty(obj.Data.MeanWakingCircadianStimulus)
+                cs = obj.Data.MeanWakingCircadianStimulus;
+            else
+                cs = NaN;
+            end
+            if ~isempty(obj.Data.GeometricMeanWakingIlluminance)
+                ill = obj.Data.GeometricMeanWakingIlluminance;
+            else
+                ill = [];
+            end
+            
             hText.String = sprintf('%.2f\n%.2f\n\n%.2f\n%.2f\n\n\n%.2f\n\n\n%.2f\n\n\n%.2f',...
-                obj.Data.Phasor.Magnitude,...
-                obj.Data.Phasor.Angle.hours,...
-                obj.Data.InterdailyStability,...
-                obj.Data.IntradailyVariability,...
-                obj.Data.MeanWakingActivityIndex,...
-                obj.Data.MeanWakingCircadianStimulus,...
-                obj.Data.GeometricMeanWakingIlluminance);
+                mag, ang, is, iv, ai, cs, ill);
         end
         
         %%
@@ -463,17 +500,6 @@ classdef composite < d12pack.report
             
             obj.initMagnitudeDistAxes;
             obj.initAngleDistAxes;
-            
-            legendObjects = [obj.MagnitudeDistHist,obj.MagnitudeDistCurve];
-            hLegend = legend(legendObjects,'Healthy Adults','Normal Fit');
-            hLegend.Orientation = 'horizontal';
-            hLegend.Box = 'off';
-            hLegend.Units = 'pixels';
-            xLegend = (398 - hLegend.Position(3))/2 +35;
-            hLegend.Position(1) = xLegend;
-            hLegend.Position(2) = 145;
-            hLegend.FontSize = 8;
-            hLegend.FontName = 'Arial';
             
             hFootnote = annotation(obj.DistributionPanel,'textbox');
             hFootnote.HorizontalAlignment = 'center';
@@ -528,11 +554,14 @@ classdef composite < d12pack.report
             deltaX = xCenters(2) - xCenters(1);
             obj.MagnitudeDistHist = bar(xCenters,nElements/sum(nElements*deltaX),1);
             set(obj.MagnitudeDistHist,'FaceColor',obj.LightBlue,'EdgeColor','w');
-            
+            obj.MagnitudeDistHist.DisplayName = 'Healthy Adults';
+            obj.MagnitudeDistHist.Tag = 'onLegend';
             
             % Plot density curve
             load('magnitudeCurve.mat','xArray','yArray');
             obj.MagnitudeDistCurve = plot(xArray,yArray,'Color','black','LineWidth',1);
+            obj.MagnitudeDistCurve.DisplayName = 'Normal Fit';
+            obj.MagnitudeDistCurve.Tag = 'onLegend';
             
             % Label axes
             xlabel('Phasor Magnitude');
@@ -632,8 +661,22 @@ classdef composite < d12pack.report
         end % End of initAngleDistAxes
         
         function plotDist(obj)
+            if ~isempty(obj.Data.Phasor.Magnitude)
             obj.plotOnCurve(obj.MagnitudeDistAxes,obj.Data.Phasor.Magnitude,'Subject',obj.MagnitudeDistCurve.XData,obj.MagnitudeDistCurve.YData);
+            end
+            if ~isempty(obj.Data.Phasor.Angle)
             obj.plotOnCurve(obj.AngleDistAxes,obj.Data.Phasor.Angle.hours,'Subject',obj.AngleDistCurve.XData,obj.AngleDistCurve.YData);
+            end
+            
+            hLegend = legend(findobj(obj.MagnitudeDistAxes,'Tag','onLegend'));
+            hLegend.Orientation = 'horizontal';
+            hLegend.Box = 'off';
+            hLegend.Units = 'pixels';
+            xLegend = (398 - hLegend.Position(3))/2 +35;
+            hLegend.Position(1) = xLegend;
+            hLegend.Position(2) = 145;
+            hLegend.FontSize = 8;
+            hLegend.FontName = 'Arial';
         end
     end
     
