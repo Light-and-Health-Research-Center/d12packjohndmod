@@ -5,7 +5,7 @@ function TF = isAtWork(obj,Time)
 % Initialize true/false array as false
 TF = false(size(Time));
 
-if obj.IsFixed
+if any(vertcat(obj.IsFixed))
     TimeDateVec = datevec(Time); % Convert Time to datevec
     TimeDateVec(:,4:6) = 0; % Remove time component leaving only date
     UniqueDateVec = unique(TimeDateVec,'rows'); % Find the unique dates
@@ -15,8 +15,8 @@ if obj.IsFixed
     StartTime = WorkDays + obj.StartTime;
     EndTime   = WorkDays + obj.EndTime;
 else % ~obj.IsFixed
-    StartTime = obj.StartTime;
-    EndTime = obj.EndTime;
+    StartTime = vertcat(obj.StartTime);
+    EndTime = vertcat(obj.EndTime);
 end
 
 % Remove empty or partial pairs
