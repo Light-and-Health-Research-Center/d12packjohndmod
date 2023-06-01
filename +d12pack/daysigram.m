@@ -259,7 +259,8 @@ classdef daysigram < d12pack.report
             y = 6;
             dim = [x,y,w,h];
             hRec = rectangle(hLegendAxes,'Position',dim,'FaceColor',purple);
-            hTxt = text(hLegendAxes,x+a,y+b,'Reported in Bed');
+%             hTxt = text(hLegendAxes,x+a,y+b,'Reported in Bed');
+            hTxt = text(hLegendAxes,x+a,y+b,'Estimated in Bed');
             hTxt.VerticalAlignment = 'baseline';
             hTxt.FontName = 'Arial';
             hTxt.FontSize = 8;

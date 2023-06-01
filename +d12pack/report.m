@@ -10,8 +10,8 @@ classdef report < matlab.mixin.SetGet
         Footer
         Body
         DateGenerated = datetime('now','TimeZone','local');
-        LRClogo
-        RPIlogo
+        LHRClogo
+        ISMMSlogo
     end
     
     properties (SetObservable)
@@ -215,36 +215,36 @@ classdef report < matlab.mixin.SetGet
             obj.PageNumBox.FontName = 'Arial';
             obj.PageNumBox.String = sprintf('%d of %d',obj.PageNumber(1),obj.PageNumber(2));
             
-            obj.initLrcLogo;
-            obj.initRpiLogo;
+            obj.initLhrcLogo;
+            obj.initIsmmsLogo;
             
             obj.positionFooter;
         end % End of initFooter
         
-        % LRC logo
-        function initLrcLogo(obj)
-            [A,map,alpha] = imread('lrcLogo.png'); % Read in our image.
+        % LHRC logo
+        function initLhrcLogo(obj)
+            [A,map,alpha] = imread('lhrcLogo.png'); % Read in our image.
             
-            obj.LRClogo = axes(obj.Footer); % Make a new axes for logo
+            obj.LHRClogo = axes(obj.Footer); % Make a new axes for logo
             
-            hLogo = image(obj.LRClogo,A);
+            hLogo = image(obj.LHRClogo,A);
             hLogo.AlphaData = alpha; % Set alpha channel
             
-            obj.LRClogo.DataAspectRatio = [1, 1, 1];
-            obj.LRClogo.Visible = 'off'; % Set axes visibility
-        end % End of initLrcLogo
+            obj.LHRClogo.DataAspectRatio = [1, 1, 1];
+            obj.LHRClogo.Visible = 'off'; % Set axes visibility
+        end % End of initLhrcLogo
         
-        % RPI Logo
-        function initRpiLogo(obj)
-            [A,map,alpha] = imread('rpiLogo.png'); % Read in our image.
+        % ISMMS Logo
+        function initIsmmsLogo(obj)
+            [A,map,alpha] = imread('ismmsLogo.png'); % Read in our image.
             
-            obj.RPIlogo = axes(obj.Footer); % Make a new axes for logo
+            obj.ISMMSlogo = axes(obj.Footer); % Make a new axes for logo
             
-            hLogo = image(obj.RPIlogo,A);
+            hLogo = image(obj.ISMMSlogo,A);
             hLogo.AlphaData = alpha; % Set alpha channel
             
-            obj.RPIlogo.DataAspectRatio = [1, 1, 1];
-            obj.RPIlogo.Visible = 'off'; % Set axes visibility
+            obj.ISMMSlogo.DataAspectRatio = [1, 1, 1];
+            obj.ISMMSlogo.Visible = 'off'; % Set axes visibility
         end
         
         function positionFooter(obj)
@@ -265,19 +265,19 @@ classdef report < matlab.mixin.SetGet
             obj.PageNumBox.Units = 'pixels';
             obj.PageNumBox.Position = [0,0,w,h];
             
-            obj.LRClogo.Units = 'pixels';
+            obj.LHRClogo.Units = 'pixels';
             x = 0;
-            h = 36;
-            w = ceil(518*h/150);
-            y = floor((obj.Footer.Position(4) - h)/2);
-            obj.LRClogo.Position = [x,y,w,h];
+            h = 40;
+            w = 152; %ceil(8000*h/1961);
+            y = floor((obj.Footer.Position(4) - h)/2)-5;
+            obj.LHRClogo.Position = [x,y,w,h];
             
-            obj.RPIlogo.Units = 'pixels';
-            h = 17;
-            w = 100; %ceil(384*h/71);
+            obj.ISMMSlogo.Units = 'pixels';
+            h = 40;
+            w = 103;
             x = obj.Footer.Position(3) - w;
-            y = floor((obj.Footer.Position(4) - h)/2);
-            obj.RPIlogo.Position = [x,y,w,h];
+            y = floor((obj.Footer.Position(4) - h)/2)-5;
+            obj.ISMMSlogo.Position = [x,y,w,h];
             
             obj.Units = oldUnits;
         end % End of positionFooter

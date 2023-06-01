@@ -10,7 +10,7 @@ else
     error(['Serial number: ',num2str(obj.SerialNumber),' is not supported']);
 end
 
-Illuminance = V(1)*Red + V(2)*Green + V(3)*Blue;
+Illuminance = Red;
 
 end
 
